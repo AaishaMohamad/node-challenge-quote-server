@@ -3,6 +3,7 @@
 
 //load the 'express' module which makes writing webservers easy
 const express = require("express");
+const lodash = require("lodash");
 const app = express();
 
 //load the quotes JSON
@@ -16,9 +17,25 @@ app.get("/", function (request, response) {
   response.send("Neill's Quote Server!  Ask me for /quotes/random, or /quotes");
 });
 
-//START OF YOUR CODE...
+/*START OF YOUR CODE..*/
+app.get("/quotes", function (req, res) {
+  res.send(quotes);
+});
 
-//...END OF YOUR CODE
+app.get("/quotes/random", function (req, res) {
+  const randomQuote = lodash.sample(quotes);
+  res.send(randomQuote);
+});
+
+app.get("/quotes/search", function (req, res) {
+  const queryParam = req.query.term;
+  const theQuote = quotes.filter((theQuote) =>
+    theQuote.quote.includes(queryParam)
+  );
+  res.send(theQuote);
+});
+
+//...END OF YOUR CODE//
 
 //You can use this function to pick one element at random from a given array
 //example: pickFromArray([1,2,3,4]), or
@@ -29,6 +46,6 @@ function pickFromArray(arr) {
 }
 
 //Start our server so that it listens for HTTP requests!
-const listener = app.listen(process.env.PORT, function () {
+const listener = app.listen(3000, function () {
   console.log("Your app is listening on port " + listener.address().port);
 });
